@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './style/reset.css'
 import 'antd/dist/antd.css';
 import Admin from './admin';
 import * as serviceWorker from './serviceWorker';
