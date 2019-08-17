@@ -50,6 +50,9 @@ const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
+const lessRegex = /\.less$/;
+const lessModuleRegex = /\.module\.less$/
+
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function (webpackEnv) {
@@ -128,6 +131,29 @@ module.exports = function (webpackEnv) {
                     },
                 }
             );
+        }
+        if (preProcessor) {
+            if (preProcessor === 'less-loader') { // 为less-loader添加配置项，启动javascript
+                loaders.push({
+                    loader: require.resolve(preProcessor),
+                    options: {
+                        sourceMap: isEnvProduction && shouldUseSourceMap,
+                        modifyVars: { // 修改主题颜色
+                            'primary-color': 'red',
+                            'link-color': 'red',
+                            'border-radius-base': '2px',
+                        },
+                        javascriptEnabled: true // 解决上文报错
+                    },
+                });
+            } else {
+                loaders.push({
+                    loader: require.resolve(preProcessor),
+                    options: {
+                        sourceMap: isEnvProduction && shouldUseSourceMap,
+                    },
+                });
+            }
         }
         return loaders;
     };
@@ -353,26 +379,6 @@ module.exports = function (webpackEnv) {
                         // Process application JS with Babel.
                         // The preset includes JSX, Flow, TypeScript, and some ESnext features.
                         {
-                            test: /\.less$/,
-                            use: [{
-                                loader: 'style-loader',
-                            }, {
-                                loader: 'css-loader', // translates CSS into CommonJS
-                            }, {
-                                loader: 'less-loader', // compiles Less to CSS
-                                options: {
-                                    modifyVars: {
-                                        'primary-color': '#1DA57A',
-                                        'link-color': '#1DA57A',
-                                        'border-radius-base': '2px',
-                                        // or
-                                       // 'hack': `true; @import "your-less-file-path.less";`, // Override with less file
-                                    },
-                                    javascriptEnabled: true,
-                                },
-                            }],
-                        },
-                        {
                             test: /\.(js|mjs|jsx|ts|tsx)$/,
                             include: paths.appSrc,
                             loader: require.resolve('babel-loader'),
@@ -458,6 +464,22 @@ module.exports = function (webpackEnv) {
                                 modules: true,
                                 getLocalIdent: getCSSModuleLocalIdent,
                             }),
+                        },
+                        {
+                            test: lessRegex,
+                            exclude: lessModuleRegex,
+                            use: getStyleLoaders({importLoaders: 2}, 'less-loader'),
+                        },
+                        {
+                            test: lessModuleRegex,
+                            use: getStyleLoaders(
+                                {
+                                    importLoaders: 2,
+                                    modules: true,
+                                    getLocalIdent: getCSSModuleLocalIdent,
+                                },
+                                'less-loader'
+                            ),
                         },
                         // Opt-in support for SASS (using .scss or .sass extensions).
                         // By default we support SASS Modules with the
