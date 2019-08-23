@@ -5,7 +5,7 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fiel
 
 body {
     background: #FAFAFA;
-    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif, '微软雅黑';
 }
 
 td, th, caption {
