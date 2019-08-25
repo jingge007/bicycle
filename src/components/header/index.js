@@ -21,7 +21,7 @@ export default class Header extends React.Component {
     }
 
     getWaetherData() {
-        let city = '北京';
+        let city = '深圳';
         Api.jonsp({
             url: 'http://api.map.baidu.com/telematics/v3/weather?location=' + encodeURIComponent(city) + '&output=json&ak=3p49MVra6urFRGOT9s8UBWr2'
         }).then((res) => {

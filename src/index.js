@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './style/reset.css'
 import 'antd/dist/antd.less';
 import Admin from './admin';
+import Router from './router'
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(<Admin/>, document.getElementById('root'));
